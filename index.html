@@ -3,80 +3,97 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Reservar cita</title>
+  <title>Reserva tu cita</title>
   <style>
     body {
-      background-color: #ffc0cb; /* rosa suave */
+      background-color: #ffe4ec;
       font-family: Arial, sans-serif;
-      padding: 20px;
-      color: #333;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
     }
-    h1 {
-      text-align: center;
-      color: #a83256;
-    }
-    form {
-      max-width: 400px;
-      margin: 0 auto;
-      background: #ffe6f0;
-      padding: 20px;
+    .formulario {
+      background-color: white;
+      padding: 2rem;
       border-radius: 10px;
-      box-shadow: 0 0 10px rgba(168, 50, 86, 0.3);
+      box-shadow: 0 0 10px #ccc;
+      max-width: 400px;
+      width: 100%;
     }
-    input, button {
+    .formulario h2 {
+      color: #d63384;
+      text-align: center;
+    }
+    .formulario input, .formulario button {
       width: 100%;
       padding: 10px;
       margin-top: 10px;
-      border: 1px solid #a83256;
+      border: 1px solid #ddd;
       border-radius: 5px;
-      font-size: 1rem;
     }
-    button {
-      background-color: #a83256;
+    .formulario button {
+      background-color: #d63384;
       color: white;
-      cursor: pointer;
+      border: none;
       font-weight: bold;
-      transition: background-color 0.3s ease;
+      cursor: pointer;
     }
-    button:hover {
-      background-color: #8a2745;
+    .formulario button:hover {
+      background-color: #c2186a;
+    }
+    .mensaje {
+      margin-top: 15px;
+      text-align: center;
+      font-weight: bold;
     }
   </style>
 </head>
 <body>
-  <h1>Reservar una cita</h1>
-  <form id="reservaForm" onsubmit="guardarReserva(event)">
+  <div class="formulario">
+    <h2>Reserva tu cita</h2>
     <input type="text" id="nombre" placeholder="Nombre" required />
-    <input type="tel" id="telefono" placeholder="Teléfono" required />
-    <input type="time" id="hora" required />
+    <input type="text" id="telefono" placeholder="Teléfono" required />
     <input type="date" id="dia" required />
-    <button type="submit">Reservar</button>
-  </form>
+    <input type="time" id="hora" required />
+    <button onclick="reservar()">Reservar</button>
+    <div class="mensaje" id="mensaje"></div>
+  </div>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
   <script>
-    const supabase = supabase.createClient(
-      'https://zcyjhzdrffkhebgrrod.supabase.co',
-      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpjeWpoemRyZmZraGhlYmdycm9kIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDgzNjI3NzIsImV4cCI6MjA2MzkzODc3Mn0.p8OvL1fqBnJfEohMlOOjAQSzcr_gwkCaK3HUgIrP4wI'
-    );
+    const supabaseUrl = 'https://zcyjhzdrffkhebgrrod.supabase.co';
+    const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpjeWpoemRyZmZraGhlYmdycm9kIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDgzNjI3NzIsImV4cCI6MjA2MzkzODc3Mn0.p8OvL1fqBnJfEohMlOOjAQSzcr_gwkCaK3HUgIrP4wI';
+    const supabase = supabase.createClient(supabaseUrl, supabaseKey);
 
-    async function guardarReserva(event) {
-      event.preventDefault();
-
-      const nombre = document.getElementById('nombre').value;
-      const telefono = document.getElementById('telefono').value;
-      const hora = document.getElementById('hora').value;
+    async function reservar() {
+      const nombre = document.getElementById('nombre').value.trim();
+      const telefono = document.getElementById('telefono').value.trim();
       const dia = document.getElementById('dia').value;
+      const hora = document.getElementById('hora').value;
+      const mensaje = document.getElementById('mensaje');
+
+      if (!nombre || !telefono || !dia || !hora) {
+        mensaje.textContent = 'Por favor completa todos los campos.';
+        mensaje.style.color = 'red';
+        return;
+      }
 
       const { error } = await supabase
         .from('reservas')
-        .insert([{ nombre, teléfono: telefono, hora, dia }]);
+        .insert([{ nombre, teléfono: telefono, dia, hora }]);
 
       if (error) {
-        alert('Error al guardar: ' + error.message);
+        mensaje.textContent = 'Error al reservar. Intenta más tarde.';
+        mensaje.style.color = 'red';
+        console.error(error);
       } else {
-        alert('¡Reserva guardada con éxito!');
-        document.getElementById('reservaForm').reset();
+        mensaje.textContent = '¡Reserva guardada con éxito!';
+        mensaje.style.color = 'green';
+        document.getElementById('nombre').value = '';
+        document.getElementById('telefono').value = '';
+        document.getElementById('dia').value = '';
+        document.getElementById('hora').value = '';
       }
     }
   </script>
