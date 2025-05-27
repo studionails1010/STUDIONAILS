@@ -1,103 +1,98 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <title>Reserva de Cita</title>
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
-  <style>
-    body {
-      background-color: #ffe4f0;
-      font-family: 'Arial', sans-serif;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      min-height: 100vh;
-      margin: 0;
-    }
-    h1 {
-      color: #d63384;
-      margin-bottom: 20px;
-    }
-    form {
-      background-color: white;
-      padding: 20px;
-      border-radius: 16px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-      width: 90%;
-      max-width: 400px;
-    }
-    input, button {
-      padding: 12px;
-      border: none;
-      border-radius: 8px;
-      font-size: 16px;
-    }
-    input {
-      border: 1px solid #ccc;
-    }
-    button {
-      background-color: #d63384;
-      color: white;
-      cursor: pointer;
-      transition: background-color 0.3s;
-    }
-    button:hover {
-      background-color: #c02670;
-    }
-    #mensaje {
-      margin-top: 10px;
-      font-weight: bold;
-      color: green;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>STUDIO NAILS BY LAURA SANCHEZ</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f0f8;
+            color: #333;
+        }
+        h1 {
+            color: #d5006d;
+        }
+        .container {
+            width: 80%;
+            margin: auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .form-section {
+            margin-bottom: 30px;
+        }
+        input[type="text"], input[type="tel"], input[type="datetime-local"], input[type="password"] {
+            width: 100%;
+            padding: 10px;
+            margin: 5px 0 20px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        input[type="submit"], input[type="button"] {
+            background-color: #d5006d;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        input[type="submit"]:hover, input[type="button"]:hover {
+            background-color: #b0004d;
+        }
+    </style>
 </head>
 <body>
-  <h1>Reserva tu cita</h1>
 
-  <form id="formulario">
-    <input type="text" id="nombre" placeholder="Nombre" required>
-    <input type="tel" id="telefono" placeholder="Teléfono" required>
-    <input type="date" id="dia" required>
-    <input type="time" id="hora" required>
-    <button type="submit">Reservar</button>
-  </form>
+<div class="container">
+    <h1>STUDIO NAILS BY LAURA SANCHEZ</h1>
+    <h2>Reservar Cita</h2>
+    <div class="form-section">
+        <form id="bookingForm">
+            <label for="name">Nombre:</label>
+            <input type="text" id="name" name="name" required>
 
-  <p id="mensaje"></p>
+            <label for="phone">Teléfono:</label>
+            <input type="tel" id="phone" name="phone" required>
 
-  <script>
-    const supabaseUrl = 'https://zcyjhzdrffkhebgrrod.supabase.co';
-    const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpjeWpoemRyZmZraGhlYmdycm9kIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDgzNjI3NzIsImV4cCI6MjA2MzkzODc3Mn0.p8OvL1fqBnJfEohMlOOjAQSzcr_gwkCaK3HUgIrP4wI';
-    const supabase = supabase.createClient(supabaseUrl, supabaseKey);
+            <label for="date">Fecha:</label>
+            <input type="datetime-local" id="date" name="date" required>
 
-    document.getElementById('formulario').addEventListener('submit', async (e) => {
-      e.preventDefault();
+            <input type="submit" value="Reservar Cita">
+        </form>
+    </div>
 
-      const nombre = document.getElementById('nombre').value;
-      const telefono = document.getElementById('telefono').value;
-      const dia = document.getElementById('dia').value;
-      const hora = document.getElementById('hora').value;
+    <h2>Inicio de Sesión</h2>
+    <div class="form-section">
+        <form id="loginForm">
+            <label for="username">Usuario:</label>
+            <input type="text" id="username" name="username" required>
 
-      const { data, error } = await supabase.from('reservas').insert([
-        { nombre, telefono, dia, hora }
-      ]);
+            <label for="password">Contraseña:</label>
+            <input type="password" id="password" name="password" required>
 
-      const mensaje = document.getElementById('mensaje');
+            <input type="button" value="Iniciar Sesión" onclick="login()">
+        </form>
+    </div>
 
-      if (error) {
-        mensaje.textContent = 'Error al guardar la reserva.';
-        mensaje.style.color = 'red';
-        console.error(error);
-      } else {
-        mensaje.textContent = '¡Reserva guardada con éxito!';
-        mensaje.style.color = 'green';
-        document.getElementById('formulario').reset();
-      }
-    });
-  </script>
+    <h3>Horario de Atención</h3>
+    <p>De 8:00 AM a 10:00 PM</p>
+</div>
+
+<script>
+    function login() {
+        // Aquí puedes agregar la lógica para el inicio de sesión
+        alert("Funcionalidad de inicio de sesión no implementada.");
+    }
+
+    document.getElementById('bookingForm').onsubmit = function(event) {
+        event.preventDefault();
+        // Aquí puedes agregar la lógica para manejar la reserva
+        alert("Cita reservada. ¡Gracias!");
+    };
+</script>
+
 </body>
 </html>
-  
