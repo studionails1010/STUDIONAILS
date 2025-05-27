@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Reservas registradas</title>
+  <style>
+    body { font-family: Arial; padding: 20px; }
+    table { border-collapse: collapse; width: 100%; margin-top: 20px; }
+    th, td { border: 1px solid #ccc; padding: 8px; text-align: left; }
+    th { background-color: #f2f2f2; }
+  </style>
+</head>
+<body>
+  <script>
+    const claveCorrecta = 'nails123';
+    const ingreso = prompt('Introduce la contraseña de administrador:');
+    if (ingreso !== claveCorrecta) {
+      alert('Acceso denegado');
+      window.location.href = 'https://www.google.com';
+    }
+  </script>
+
+  <h1>Listado de reservas</h1>
+  <table id="tablaReservas">
+    <thead>
+      <tr>
+        <th>Nombre</th>
+        <th>Teléfono</th>
+        <th>Día</th>
+        <th>Hora</th>
+      </tr>
+    </thead>
+    <tbody id="cuerpoTabla"></tbody>
+  </table>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+  <script>
+    const supabase = supabase.createClient(
+      'https://zcyjhzdrffkhebgrrod.supabase.co',
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpjeWpoemRyZmZraGhlYmdycm9kIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDgzNjI3NzIsImV4cCI6MjA2MzkzODc3Mn0.p8OvL1fqBnJfEohMlOOjAQSzcr_gwkCaK3HUgIrP4wI'
+    );
+
+    async function cargarReservas() {
+      const { data, error } = await supabase
+        .from('reservas')
+        .select('*')
+        .order('dia', { ascending: true });
+
+      if (error) {
+        alert('Error al cargar reservas: ' + error.message);
+        return;
+      }
+
+      const cuerpo = document.getElementById('cuerpoTabla');
+      cuerpo.innerHTML = '';
+
+      data.forEach(reserva => {
+        const fila = document.createElement('tr');
+        fila.innerHTML = `
+          <td>${reserva.nombre}</td>
+          <td>${reserva.teléfono}</td>
+          <td>${reserva.dia}</td>
+          <td>${reserva.hora}</td>
+        `;
+        cuerpo.appendChild(fila);
+      });
+    }
+
+    cargarReservas();
+  </script>
+</body>
+</html>
