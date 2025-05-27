@@ -1,51 +1,48 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <title>Prueba botón</title>
+  <meta charset="UTF-8">
+  <title>Reservar cita</title>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
 </head>
 <body>
-  <button onclick="alert('¡Funciona!')">Reservar</button>
-</body>
-</html>
-  </div>
+  <h1>Reservar cita</h1>
 
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+  <form id="formulario">
+    <input type="text" id="nombre" placeholder="Nombre" required><br>
+    <input type="tel" id="telefono" placeholder="Teléfono" required><br>
+    <input type="date" id="dia" required><br>
+    <input type="time" id="hora" required><br>
+    <button type="submit">Reservar</button>
+  </form>
+
+  <p id="mensaje"></p>
+
   <script>
     const supabaseUrl = 'https://zcyjhzdrffkhebgrrod.supabase.co';
     const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpjeWpoemRyZmZraGhlYmdycm9kIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDgzNjI3NzIsImV4cCI6MjA2MzkzODc3Mn0.p8OvL1fqBnJfEohMlOOjAQSzcr_gwkCaK3HUgIrP4wI';
     const supabase = supabase.createClient(supabaseUrl, supabaseKey);
 
-    async function reservar() {
-      const nombre = document.getElementById('nombre').value.trim();
-      const telefono = document.getElementById('telefono').value.trim();
+    document.getElementById('formulario').addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const nombre = document.getElementById('nombre').value;
+      const telefono = document.getElementById('telefono').value;
       const dia = document.getElementById('dia').value;
       const hora = document.getElementById('hora').value;
-      const mensaje = document.getElementById('mensaje');
 
-      if (!nombre || !telefono || !dia || !hora) {
-        mensaje.textContent = 'Por favor completa todos los campos.';
-        mensaje.style.color = 'red';
-        return;
-      }
-
-      const { error } = await supabase
-        .from('reservas')
-        .insert([{ nombre, teléfono: telefono, dia, hora }]);
+      const { data, error } = await supabase.from('reservas').insert([
+        { nombre, telefono, dia, hora }
+      ]);
 
       if (error) {
-        mensaje.textContent = 'Error al reservar. Intenta más tarde.';
-        mensaje.style.color = 'red';
+        document.getElementById('mensaje').textContent = 'Error al guardar reserva';
         console.error(error);
       } else {
-        mensaje.textContent = '¡Reserva guardada con éxito!';
-        mensaje.style.color = 'green';
-        document.getElementById('nombre').value = '';
-        document.getElementById('telefono').value = '';
-        document.getElementById('dia').value = '';
-        document.getElementById('hora').value = '';
+        document.getElementById('mensaje').textContent = '¡Reserva guardada con éxito!';
+        document.getElementById('formulario').reset();
       }
-    }
+    });
   </script>
 </body>
 </html>
