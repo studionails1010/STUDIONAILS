@@ -3,17 +3,59 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Reservar cita</title>
+  <title>Reservas registradas</title>
+  <style>
+    body {
+      background-color: #ffc0cb; /* rosa suave */
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      color: #333;
+    }
+    h1 {
+      text-align: center;
+      color: #a83256;
+    }
+    table {
+      border-collapse: collapse;
+      width: 100%;
+      margin-top: 20px;
+      background: #ffe6f0;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(168, 50, 86, 0.3);
+    }
+    th, td {
+      border: 1px solid #a83256;
+      padding: 8px;
+      text-align: left;
+    }
+    th {
+      background-color: #f7b8c9;
+      color: #5a1030;
+    }
+  </style>
 </head>
 <body>
-  <h1>Reservar una cita</h1>
-  <form id="reservaForm" onsubmit="guardarReserva(event)">
-    <input type="text" id="nombre" placeholder="Nombre" required />
-    <input type="tel" id="telefono" placeholder="Teléfono" required />
-    <input type="time" id="hora" required />
-    <input type="date" id="dia" required />
-    <button type="submit">Reservar</button>
-  </form>
+  <script>
+    const claveCorrecta = 'nails123';
+    const ingreso = prompt('Introduce la contraseña de administrador:');
+    if (ingreso !== claveCorrecta) {
+      alert('Acceso denegado');
+      window.location.href = 'https://www.google.com';
+    }
+  </script>
+
+  <h1>Listado de reservas</h1>
+  <table id="tablaReservas">
+    <thead>
+      <tr>
+        <th>Nombre</th>
+        <th>Teléfono</th>
+        <th>Día</th>
+        <th>Hora</th>
+      </tr>
+    </thead>
+    <tbody id="cuerpoTabla"></tbody>
+  </table>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
   <script>
@@ -22,25 +64,33 @@
       'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpjeWpoemRyZmZraGhlYmdycm9kIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDgzNjI3NzIsImV4cCI6MjA2MzkzODc3Mn0.p8OvL1fqBnJfEohMlOOjAQSzcr_gwkCaK3HUgIrP4wI'
     );
 
-    async function guardarReserva(event) {
-      event.preventDefault();
-
-      const nombre = document.getElementById('nombre').value;
-      const telefono = document.getElementById('telefono').value;
-      const hora = document.getElementById('hora').value;
-      const dia = document.getElementById('dia').value;
-
-      const { error } = await supabase
+    async function cargarReservas() {
+      const { data, error } = await supabase
         .from('reservas')
-        .insert([{ nombre, teléfono: telefono, hora, dia }]);
+        .select('*')
+        .order('dia', { ascending: true });
 
       if (error) {
-        alert('Error al guardar: ' + error.message);
-      } else {
-        alert('¡Reserva guardada con éxito!');
-        document.getElementById('reservaForm').reset();
+        alert('Error al cargar reservas: ' + error.message);
+        return;
       }
+
+      const cuerpo = document.getElementById('cuerpoTabla');
+      cuerpo.innerHTML = '';
+
+      data.forEach(reserva => {
+        const fila = document.createElement('tr');
+        fila.innerHTML = `
+          <td>${reserva.nombre}</td>
+          <td>${reserva.teléfono}</td>
+          <td>${reserva.dia}</td>
+          <td>${reserva.hora}</td>
+        `;
+        cuerpo.appendChild(fila);
+      });
     }
+
+    cargarReservas();
   </script>
 </body>
 </html>
