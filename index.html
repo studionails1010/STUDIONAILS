@@ -2,62 +2,12 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Reserva tu cita</title>
-  <style>
-    body {
-      background-color: #ffe4ec;
-      font-family: Arial, sans-serif;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-    }
-    .formulario {
-      background-color: white;
-      padding: 2rem;
-      border-radius: 10px;
-      box-shadow: 0 0 10px #ccc;
-      max-width: 400px;
-      width: 100%;
-    }
-    .formulario h2 {
-      color: #d63384;
-      text-align: center;
-    }
-    .formulario input, .formulario button {
-      width: 100%;
-      padding: 10px;
-      margin-top: 10px;
-      border: 1px solid #ddd;
-      border-radius: 5px;
-    }
-    .formulario button {
-      background-color: #d63384;
-      color: white;
-      border: none;
-      font-weight: bold;
-      cursor: pointer;
-    }
-    .formulario button:hover {
-      background-color: #c2186a;
-    }
-    .mensaje {
-      margin-top: 15px;
-      text-align: center;
-      font-weight: bold;
-    }
-  </style>
+  <title>Prueba botón</title>
 </head>
 <body>
-  <div class="formulario">
-    <h2>Reserva tu cita</h2>
-    <input type="text" id="nombre" placeholder="Nombre" required />
-    <input type="text" id="telefono" placeholder="Teléfono" required />
-    <input type="date" id="dia" required />
-    <input type="time" id="hora" required />
-    <button onclick="alert('¡Funciona!')">Reservar</button>
-    <div class="mensaje" id="mensaje"></div>
+  <button onclick="alert('¡Funciona!')">Reservar</button>
+</body>
+</html>
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
