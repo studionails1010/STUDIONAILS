@@ -1,51 +1,47 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Reservas registradas</title>
+  <meta charset="UTF-8">
+  <title>Administrador de Reservas</title>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
   <style>
     body {
-      background-color: #ffc0cb; /* rosa suave */
-      font-family: Arial, sans-serif;
+      background-color: #ffe4f0;
+      font-family: 'Arial', sans-serif;
       padding: 20px;
-      color: #333;
+      margin: 0;
     }
     h1 {
       text-align: center;
-      color: #a83256;
+      color: #d63384;
     }
     table {
-      border-collapse: collapse;
       width: 100%;
-      margin-top: 20px;
-      background: #ffe6f0;
-      border-radius: 10px;
-      box-shadow: 0 0 10px rgba(168, 50, 86, 0.3);
+      max-width: 800px;
+      margin: 20px auto;
+      border-collapse: collapse;
+      background-color: white;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
     }
     th, td {
-      border: 1px solid #a83256;
-      padding: 8px;
+      padding: 12px;
+      border-bottom: 1px solid #eee;
       text-align: left;
     }
     th {
-      background-color: #f7b8c9;
-      color: #5a1030;
+      background-color: #f8d3e0;
+      color: #d63384;
+    }
+    tr:last-child td {
+      border-bottom: none;
     }
   </style>
 </head>
 <body>
-  <script>
-    const claveCorrecta = 'nails123';
-    const ingreso = prompt('Introduce la contraseña de administrador:');
-    if (ingreso !== claveCorrecta) {
-      alert('Acceso denegado');
-      window.location.href = 'https://www.google.com';
-    }
-  </script>
-
-  <h1>Listado de reservas</h1>
-  <table id="tablaReservas">
+  <h1>Reservas Registradas</h1>
+  <table id="tabla">
     <thead>
       <tr>
         <th>Nombre</th>
@@ -54,39 +50,35 @@
         <th>Hora</th>
       </tr>
     </thead>
-    <tbody id="cuerpoTabla"></tbody>
+    <tbody>
+    </tbody>
   </table>
 
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
   <script>
-    const supabase = supabase.createClient(
-      'https://zcyjhzdrffkhebgrrod.supabase.co',
-      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpjeWpoemRyZmZraGhlYmdycm9kIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDgzNjI3NzIsImV4cCI6MjA2MzkzODc3Mn0.p8OvL1fqBnJfEohMlOOjAQSzcr_gwkCaK3HUgIrP4wI'
-    );
+    const supabaseUrl = 'https://zcyjhzdrffkhebgrrod.supabase.co';
+    const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpjeWpoemRyZmZraGhlYmdycm9kIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDgzNjI3NzIsImV4cCI6MjA2MzkzODc3Mn0.p8OvL1fqBnJfEohMlOOjAQSzcr_gwkCaK3HUgIrP4wI';
+    const supabase = supabase.createClient(supabaseUrl, supabaseKey);
 
     async function cargarReservas() {
-      const { data, error } = await supabase
-        .from('reservas')
-        .select('*')
-        .order('dia', { ascending: true });
+      const { data, error } = await supabase.from('reservas').select('*').order('dia', { ascending: true });
 
       if (error) {
-        alert('Error al cargar reservas: ' + error.message);
+        alert('Error al cargar las reservas');
         return;
       }
 
-      const cuerpo = document.getElementById('cuerpoTabla');
-      cuerpo.innerHTML = '';
+      const tbody = document.querySelector('#tabla tbody');
+      tbody.innerHTML = '';
 
-      data.forEach(reserva => {
+      data.forEach((reserva) => {
         const fila = document.createElement('tr');
         fila.innerHTML = `
           <td>${reserva.nombre}</td>
-          <td>${reserva.teléfono}</td>
+          <td>${reserva.telefono}</td>
           <td>${reserva.dia}</td>
           <td>${reserva.hora}</td>
         `;
-        cuerpo.appendChild(fila);
+        tbody.appendChild(fila);
       });
     }
 
